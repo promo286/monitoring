@@ -30,3 +30,18 @@ Grafana architecture includes:
 - **Frontend**: Provides the user interface for creating and viewing dashboards.
 - **Plugins**: Extend Grafana's functionality.
 
+ - job_name: "ec2_sd"
+    ec2_sd_configs:
+    - region: us-east-1
+      port: 9100
+      filters:
+        - name: tag:Monitoring
+          values:
+            - true
+    relabel_configs:
+      - source_labels: [__meta_ec2_instance_id]
+        target_label: instance_id
+      - source_labels: [__meta_ec2_private_ip]
+        target_label: private_ip
+      - source_labels: [__meta_ec2_tag_Name]
+        target_label: name

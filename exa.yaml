@@ -1,0 +1,28 @@
+server:
+  http_listen_port: 9080  # Promtail’s local API, does NOT affect Loki forwarding
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://172.31.31.112:3100/loki/api/v1/push  # Ensure Loki is reachable
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: varlogs
+      __path__: /var/log/*.log
+      logtype: system
+
+- job_name: log-gen
+  static_configs:
+  - targets:
+      - localhost  # Keep it localhost if logs are on the same node
+    labels:
+      job: applog
+      __path__: /root/*.log
+      logtype: application

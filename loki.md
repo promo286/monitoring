@@ -80,7 +80,6 @@ After=network.target
 [Service]
 ExecStart=/usr/local/bin/loki -config.file=/home/youruser/loki-config.yml
 Restart=always
-User=youruser
 
 [Install]
 WantedBy=multi-user.target

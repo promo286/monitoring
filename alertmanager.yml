@@ -11,7 +11,7 @@ receivers:
         auth_username: AKIAYWBJYPR7FVLKZOGU
         auth_password: BH7ZOBWh4dyW82uGouY6gioSiucbOxiHBWRcfig3yXzq
         from: ravipramoth28@gmail.com 
-        to: ravipramoth@gmail.com
+        to: ravipramoth28@gmail.com
         headers:
           subject: Prometheus Mail Alert
 inhibit_rules:

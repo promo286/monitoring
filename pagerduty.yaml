@@ -1,50 +1,36 @@
 global:
-  resolve_timeout: 5m
-  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
-
+  pagerduty_url: 'https://events.pagerduty.com/generic/2010-04-15/create_event.json'
+  
 route:
-  group_by: ['alertname']
-  group_wait: 30s
-  group_interval: 5m
-  repeat_interval: 1h
-  receiver: 'ses'  # Default receiver for non-critical alerts
-
+  receiver: 'pagerduty-notifications'
+  group_by: ['alertname','instance','severity'] 
   routes:
-    - match:
+    - receiver: 'ses'
+      group_wait: 30s
+      match:
         severity: 'critical'
-      receiver: 'critical-alerts'  # Send critical alerts to both PagerDuty & Email
+      continue: true  # Continue processing other matching routes
+
+    - receiver: 'pagerduty-notifications'
+      group_wait: 30s
+      match_re:
+        severity: 'warning|critical'
+      continue: true  # Continue processing if another route applies
 
 receivers:
   - name: 'ses'
     email_configs:
       - smarthost: email-smtp.us-east-1.amazonaws.com:587
-        auth_username: AKIAYWBJYPR7FVLKZOGU
-        auth_password: BH7ZOBWh4dyW82uGouY6gioSiucbOxiHBWRcfig3yXzq
-        from: ravipramoth28@gmail.com
-        to: ravipramoth@gmail.com
-        require_tls: true
-        headers:
-          subject: "[Prometheus Alert] Notification"
-
-  - name: 'pagerduty'
-    pagerduty_configs:
-      - service_key: f59caf0e4fc2480ac08acfa9fe7a499e
-        send_resolved: true
-
-  - name: 'critical-alerts'
-    email_configs:
-      - smarthost: email-smtp.us-east-1.amazonaws.com:587
-        auth_username: AKIAYWBJYPR7FVLKZOGU
-        auth_password: BH7ZOBWh4dyW82uGouY6gioSiucbOxiHBWRcfig3yXzq
-        from: ravipramoth28@gmail.com
+        auth_username: <put your keys>
+        auth_password: <put your keys>
+        from: ravipramoth28@gmail.com 
         to: ravipramoth28@gmail.com
-        require_tls: true
         headers:
-          subject: "[CRITICAL] Prometheus Alert"
-
+          subject: Prometheus Mail Alert
+  - name: 'pagerduty-notifications'
     pagerduty_configs:
-      - service_key: f59caf0e4fc2480ac08acfa9fe7a499e
-        send_resolved: true
+       - service_key: <Pagerdutuy keys>
+         send_resolved: true
 
 inhibit_rules:
   - source_match:

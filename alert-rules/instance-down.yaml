@@ -2,6 +2,7 @@ groups:
 - name: InstanceDown
   rules:
   - alert: InstanceDownAlert
+    interval: 1m
     expr: up < 1
     for: 1m
     labels:

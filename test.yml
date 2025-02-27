@@ -1,0 +1,29 @@
+receivers:
+  - name: 'ses'
+    email_configs:
+      - smarthost: email-smtp.us-east-1.amazonaws.com:587
+        auth_username: "YOUR_AWS_SES_SMTP_USERNAME"
+        auth_password: "YOUR_AWS_SES_SMTP_PASSWORD"
+        from: ravipramoth28@gmail.com
+        to: ravipramoth28@gmail.com
+        headers:
+          subject: "[Prometheus Alert] Notification"
+
+  - name: 'pagerduty'
+    pagerduty_configs:
+      - service_key: "YOUR_PAGERDUTY_SERVICE_KEY"
+        send_resolved: true
+
+  - name: 'critical-alerts'
+    email_configs:
+      - smarthost: email-smtp.us-east-1.amazonaws.com:587
+        auth_username: "YOUR_AWS_SES_SMTP_USERNAME"
+        auth_password: "YOUR_AWS_SES_SMTP_PASSWORD"
+        from: ravipramoth28@gmail.com
+        to: ravipramoth28@gmail.com
+        headers:
+          subject: "[CRITICAL] Prometheus Alert"
+
+    pagerduty_configs:
+      - service_key: "YOUR_PAGERDUTY_SERVICE_KEY"
+        send_resolved: true
